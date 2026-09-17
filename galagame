@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>吴浩轩 · 校园剧情系统</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Microsoft YaHei",
+        Arial,
+        sans-serif;
+
+    background:#080b10;
+    color:#f5f5f5;
+    min-height:100vh;
+}
+
+/* =========================
+   顶部
+========================= */
+
+.topbar{
+    height:82px;
+    background:rgba(12,16,23,.96);
+    border-bottom:1px solid #252b35;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 35px;
+
+    position:sticky;
+    top:0;
+    z-index:100;
+
+    backdrop-filter:blur(15px);
+}
+
+.player{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:linear-gradient(135deg,#ff6b35,#ff9f43);
+    font-weight:bold;
+    font-size:18px;
+
+    box-shadow:0 0 20px rgba(255,107,53,.25);
+}
+
+.player-name{
+    font-size:20px;
+    font-weight:700;
+}
+
+.player-level{
+    color:#8993a3;
+    font-size:12px;
+    margin-top:3px;
+}
+
+.school{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.school-logo{
+    width:48px;
+    height:58px;
+    object-fit:contain;
+    background:white;
+    border-radius:6px;
+    padding:3px;
+}
+
+.school-name{
+    text-align:right;
+}
+
+.school-name strong{
+    display:block;
+    font-size:15px;
+}
+
+.school-name span{
+    color:#8d96a5;
+    font-size:11px;
+}
+
+
+/* =========================
+   页面布局
+========================= */
+
+.layout{
+    display:flex;
+    min-height:calc(100vh - 82px);
+}
+
+
+/* =========================
+   左侧菜单
+========================= */
+
+.sidebar{
+    width:230px;
+    background:#0d1118;
+    border-right:1px solid #222832;
+    padding:25px 15px;
+}
+
+.menu-title{
+    color:#646e7d;
+    font-size:11px;
+    letter-spacing:2px;
+    padding:10px 15px;
+    margin-bottom:8px;
+}
+
+.menu-btn{
+    width:100%;
+    padding:14px 15px;
+    border:0;
+    background:transparent;
+    color:#9ba5b5;
+    text-align:left;
+    border-radius:9px;
+    margin-bottom:5px;
+    cursor:pointer;
+    font-size:14px;
+    transition:.2s;
+}
+
+.menu-btn:hover{
+    background:#171d27;
+    color:white;
+}
+
+.menu-btn.active{
+    background:#202832;
+    color:white;
+    border-left:3px solid #ff7043;
+}
+
+.menu-icon{
+    margin-right:10px;
+}
+
+
+/* =========================
+   主区域
+========================= */
+
+.main{
+    flex:1;
+    padding:35px;
+    max-width:1300px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+
+/* =========================
+   欢迎区域
+========================= */
+
+.hero{
+    padding:35px;
+    border-radius:18px;
+
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(255,112,67,.18),
+            transparent 35%
+        ),
+        linear-gradient(135deg,#151b24,#0e131a);
+
+    border:1px solid #29313c;
+
+    margin-bottom:25px;
+}
+
+.hero-small{
+    color:#ff8a65;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:10px;
+}
+
+.hero h1{
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    color:#8993a3;
+    line-height:1.7;
+}
+
+
+/* =========================
+   数据卡
+========================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:#111720;
+    border:1px solid #252d38;
+    border-radius:14px;
+    padding:20px;
+}
+
+.stat-title{
+    color:#778292;
+    font-size:12px;
+}
+
+.stat-value{
+    font-size:25px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+.orange{
+    color:#ff7043;
+}
+
+.green{
+    color:#55d68b;
+}
+
+
+/* =========================
+   任务
+========================= */
+
+.panel{
+    background:#10161f;
+    border:1px solid #252d38;
+    border-radius:15px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.panel-head{
+    padding:20px;
+    border-bottom:1px solid #252d38;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.panel-head h2{
+    font-size:19px;
+}
+
+.panel-head span{
+    color:#6f7988;
+    font-size:12px;
+}
+
+.task{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:18px 20px;
+    border-bottom:1px solid #202630;
+    transition:.2s;
+}
+
+.task:last-child{
+    border-bottom:0;
+}
+
+.task:hover{
+    background:#141b25;
+}
+
+.checkbox{
+    width:25px;
+    height:25px;
+    border-radius:7px;
+    border:2px solid #566171;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:.2s;
+}
+
+.task.done .checkbox{
+    background:#43c978;
+    border-color:#43c978;
+    color:#07150d;
+}
+
+.task.done .task-name{
+    text-decoration:line-through;
+    color:#66707e;
+}
+
+.task-info{
+    flex:1;
+}
+
+.task-name{
+    font-weight:600;
+}
+
+.task-desc{
+    color:#737d8b;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.fire{
+    color:#ff7043;
+    font-size:12px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   感情网
+========================= */
+
+.relationship{
+    position:relative;
+    min-height:570px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,112,67,.05),
+            transparent 45%
+        ),
+        #0d1219;
+
+    border:1px solid #252d38;
+    border-radius:18px;
+
+    overflow:hidden;
+}
+
+.connection{
+    position:absolute;
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        rgba(255,112,67,.2),
+        #ff7043,
+        rgba(255,112,67,.2)
+    );
+
+    transform-origin:left center;
+}
+
+.line1{
+    width:250px;
+    top:280px;
+    left:50%;
+    transform:rotate(180deg);
+}
+
+.line2{
+    width:250px;
+    top:280px;
+    left:50%;
+    transform:rotate(0deg);
+}
+
+.person{
+    position:absolute;
+    width:160px;
+    padding:20px 10px;
+
+    background:#141b25;
+    border:1px solid #303947;
+    border-radius:15px;
+
+    text-align:center;
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+}
+
+.person.main-person{
+    left:50%;
+    top:50%;
+
+    border-color:#ff7043;
+    box-shadow:
+        0 0 35px rgba(255,112,67,.12);
+}
+
+.person.ilya{
+    left:20%;
+    top:50%;
+}
+
+.person.lucas{
+    left:80%;
+    top:50%;
+}
+
+.person-icon{
+    width:55px;
+    height:55px;
+
+    margin:auto;
+    margin-bottom:10px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+    font-weight:bold;
+
+    background:#222b37;
+}
+
+.main-person .person-icon{
+    background:#ff7043;
+    color:#111;
+}
+
+.person-name{
+    font-weight:bold;
+}
+
+.relation{
+    color:#7d8795;
+    font-size:12px;
+    margin-top:5px;
+}
+
+
+/* =========================
+   剧情
+========================= */
+
+.story{
+    background:#10161f;
+    border:1px solid #29313d;
+    border-radius:16px;
+    padding:25px;
+}
+
+.story-date{
+    color:#ff7043;
+    font-size:12px;
+    letter-spacing:2px;
+}
+
+.story h2{
+    margin:10px 0;
+}
+
+.story-text{
+    color:#a2abb8;
+    line-height:1.8;
+    margin:20px 0;
+}
+
+.next-btn{
+    padding:12px 22px;
+    border:none;
+    border-radius:8px;
+
+    background:#ff7043;
+    color:white;
+
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.next-btn:hover{
+    background:#ff855e;
+}
+
+
+/* =========================
+   手机适配
+========================= */
+
+@media(max-width:800px){
+
+    .sidebar{
+        width:65px;
+        padding:20px 8px;
+    }
+
+    .menu-title{
+        display:none;
+    }
+
+    .menu-btn{
+        text-align:center;
+        font-size:0;
+    }
+
+    .menu-icon{
+        font-size:20px;
+        margin:0;
+    }
+
+    .main{
+        padding:20px;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .school-name{
+        display:none;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .hero h1{
+        font-size:30px;
+    }
+
+    .person{
+        width:120px;
+    }
+
+    .ilya{
+        left:18% !important;
+    }
+
+    .lucas{
+        left:82% !important;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     顶部
+========================= -->
+
+<header class="topbar">
+
+    <div class="player">
+
+        <div class="avatar">
+            吴
+        </div>
+
+        <div>
+            <div class="player-name">
+                吴浩轩
+            </div>
+
+            <div class="player-level">
+                PLAYER · CAMPUS LIFE
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="school">
+
+        <div class="school-name">
+
+            <strong>
+                丽晶国际学校
+            </strong>
+
+            <span>
+                REGENTS INTERNATIONAL SCHOOL PATTAYA
+            </span>
+
+        </div>
+
+        <img
+            class="school-logo"
+            src="https://theinternationalschools.com/th/wp-content/uploads/sites/18/2025/09/regents-international-school-pattaya-logo-TISG-thailand.png"
+            alt="Regents International School Pattaya Logo"
+        >
+
+    </div>
+
+</header>
+
+
+
+<div class="layout">
+
+
+<!-- =========================
+     菜单
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="menu-title">
+        CAMPUS SYSTEM
+    </div>
+
+    <button
+        class="menu-btn active"
+        onclick="showPage('home',this)"
+    >
+        <span class="menu-icon">🏠</span>
+        大厅
+    </button>
+
+    <button
+        class="menu-btn"
+        onclick="showPage('tasks',this)"
+    >
+        <span class="menu-icon">🔥</span>
+        任务栏
+    </button>
+
+    <button
+        class="menu-btn"
+        onclick="showPage('relations',this)"
+    >
+        <span class="menu-icon">🕸️</span>
+        感情网
+    </button>
+
+    <button
+        class="menu-btn"
+        onclick="showPage('story',this)"
+    >
+        <span class="menu-icon">📖</span>
+        剧情
+    </button>
+
+</aside>
+
+
+
+<main class="main">
+
+
+<!-- =========================
+     大厅
+========================= -->
+
+<section
+    id="home"
+    class="page active"
+>
+
+    <div class="hero">
+
+        <div class="hero-small">
+            DAY 01 · CAMPUS LIFE
+        </div>
+
+        <h1>
+            欢迎回来，吴浩轩
+        </h1>
+
+        <p>
+            你的校园剧情已经开始。
+            今天的任务、人物关系和事件都会在这里记录。
+        </p>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-title">
+                当前地点
+            </div>
+
+            <div class="stat-value">
+                🏫 校园
+            </div>
+        </div>
+
+
+        <div class="stat">
+            <div class="stat-title">
+                今日任务
+            </div>
+
+            <div
+                class="stat-value orange"
+                id="taskCount"
+            >
+                0 / 2
+            </div>
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                剧情状态
+            </div>
+
+            <div class="stat-value green">
+                ACTIVE
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="panel-head">
+
+            <h2>
+                🔥 今日任务
+            </h2>
+
+            <span>
+                MAIN QUEST
+            </span>
+
+        </div>
+
+
+        <div
+            class="task"
+            onclick="completeTask(this)"
+        >
+
+            <div class="checkbox">
+            </div>
+
+            <div class="task-info">
+
+                <div class="task-name">
+                    完成数学家庭作业
+                </div>
+
+                <div class="task-desc">
+                    完成今天的数学作业。
+                </div>
+
+            </div>
+
+            <div class="fire">
+                🔥 FIRE
+            </div>
+
+        </div>
+
+
+        <div
+            class="task"
+            onclick="completeTask(this)"
+        >
+
+            <div class="checkbox">
+            </div>
+
+            <div class="task-info">
+
+                <div class="task-name">
+                    准备好星期五的校院衣服
+                </div>
+
+                <div class="task-desc">
+                    提前准备好星期五需要穿的校园服装。
+                </div>
+
+            </div>
+
+            <div class="fire">
+                🔥 FIRE
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     任务页
+========================= -->
+
+<section
+    id="tasks"
+    class="page"
+>
+
+    <div class="hero">
+
+        <div class="hero-small">
+            QUEST BOARD
+        </div>
+
+        <h1>
+            任务栏
+        </h1>
+
+        <p>
+            当前需要完成的任务。
+        </p>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="panel-head">
+
+            <h2>
+                🔥 FIRE TASKS
+            </h2>
+
+            <span>
+                PRIORITY
+            </span>
+
+        </div>
+
+
+        <div
+            class="task"
+            onclick="completeTask(this)"
+        >
+
+            <div class="checkbox"></div>
+
+            <div class="task-info">
+
+                <div class="task-name">
+                    完成数学家庭作业
+                </div>
+
+                <div class="task-desc">
+                    学业任务
+                </div>
+
+            </div>
+
+            <div class="fire">
+                🔥
+            </div>
+
+        </div>
+
+
+        <div
+            class="task"
+            onclick="completeTask(this)"
+        >
+
+            <div class="checkbox"></div>
+
+            <div class="task-info">
+
+                <div class="task-name">
+                    准备好星期五的校院衣服
+                </div>
+
+                <div class="task-desc">
+                    校园准备任务
+                </div>
+
+            </div>
+
+            <div class="fire">
+                🔥
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     感情网
+========================= -->
+
+<section
+    id="relations"
+    class="page"
+>
+
+    <div class="hero">
+
+        <div class="hero-small">
+            RELATIONSHIP NETWORK
+        </div>
+
+        <h1>
+            感情网
+        </h1>
+
+        <p>
+            当前人物关系网络。
+        </p>
+
+    </div>
+
+
+    <div class="relationship">
+
+        <div class="connection line1"></div>
+        <div class="connection line2"></div>
+
+
+        <!-- Ilya -->
+
+        <div class="person ilya">
+
+            <div class="person-icon">
+                I
+            </div>
+
+            <div class="person-name">
+                Ilya
+            </div>
+
+            <div class="relation">
+                兄弟
+            </div>
+
+        </div>
+
+
+        <!-- 自己 -->
+
+        <div class="person main-person">
+
+            <div class="person-icon">
+                吴
+            </div>
+
+            <div class="person-name">
+                吴浩轩
+            </div>
+
+            <div class="relation">
+                自己 · PLAYER
+            </div>
+
+        </div>
+
+
+        <!-- Lucas -->
+
+        <div class="person lucas">
+
+            <div class="person-icon">
+                L
+            </div>
+
+            <div class="person-name">
+                卢卡斯
+            </div>
+
+            <div class="relation">
+                兄弟
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================
+     剧情
+========================= -->
+
+<section
+    id="story"
+    class="page"
+>
+
+    <div class="hero">
+
+        <div class="hero-small">
+            STORY MODE
+        </div>
+
+        <h1>
+            校园剧情
+        </h1>
+
+        <p>
+            你的校园生活，从今天开始。
+        </p>
+
+    </div>
+
+
+    <div class="story">
+
+        <div class="story-date">
+            DAY 01 · MORNING
+        </div>
+
+        <h2 id="storyTitle">
+            一个普通的校园早晨
+        </h2>
+
+        <p
+            class="story-text
